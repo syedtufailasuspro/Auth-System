@@ -41,26 +41,25 @@ app.use(cookieParser());
 // CORS middleware for local development
 // CORS middleware for production
 app.use((req, res, next) => {
-  // Allow multiple origins in production
   const allowedOrigins = [
-  'https://auth-system-vzmh.vercel.app'
-];
+    'https://auth-system-vzmh.vercel.app'
+  ];
 
-  
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Origin', origin); // Use setHeader instead of header
   }
-  
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
+
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // Allow cookies
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
   next();
 });
+
 
 
 // In-memory storage (replace with database in production)
@@ -499,18 +498,18 @@ app.post('/api/refresh-token', (req, res) => {
 
       // Set new cookies
       res.cookie('sessionToken', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 15 * 60 * 1000 // 15 minutes
-      });
-
-      res.cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-      });
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 15 * 60 * 1000
+    });
+    
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 
       res.json({
         success: true,
