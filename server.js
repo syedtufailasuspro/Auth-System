@@ -37,8 +37,6 @@ emailTransporter.verify((error, success) => {
 app.use(express.json());
 app.use(cookieParser());
 
-// Serve static files (for index.html)
-app.use(express.static('.'));
 
 // CORS middleware for local development
 // CORS middleware for production
