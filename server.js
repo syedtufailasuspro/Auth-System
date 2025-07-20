@@ -354,18 +354,19 @@ app.post('/api/login', async (req, res) => {
 
     // Set HTTP-only cookies
     res.cookie('sessionToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000 // 15 minutes
-    });
+    httpOnly: true,
+    secure: true,            // Always true (Render uses HTTPS)
+    sameSite: 'none',        // Required for cross-origin cookies
+    maxAge: 15 * 60 * 1000
+  });
+  
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
 
     res.json({
       success: true,
