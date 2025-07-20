@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth System Frontend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px 20px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-container {
+            padding: 30px 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            box-shadow: 0 10px 25px rgba(107, 114, 128, 0.3);
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .message.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .form-toggle {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-toggle a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .profile-card {
+            text-align: center;
+        }
+
+        .profile-info {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .profile-info h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .profile-detail:last-child {
+            border-bottom: none;
+        }
+
+        .profile-detail label {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .profile-detail span {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff33;
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .otp-container {
+            text-align: center;
+        }
+
+        .otp-info {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .email-info {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .otp-input {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="page-title">Welcome</h1>
+            <p id="page-subtitle">Sign in to your account</p>
+        </div>
+
+        <div class="form-container">
+            <div id="message"></div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-identifier">Email or Mobile</label>
+                    <input type="text" id="login-identifier" name="identifier" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Sign In</button>
+                <div class="form-toggle">
+                    <a href="#" onclick="showSignup()">Don't have an account? Sign up</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form hidden">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-mobile">Mobile (10 digits)</label>
+                    <input type="tel" id="signup-mobile" name="mobile" pattern="[0-9]{10}" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password (min 6 characters)</label>
+                    <input type="password" id="signup-password" name="password" minlength="6" required>
+                </div>
+                <button type="submit" class="btn">Create Account</button>
+                <div class="form-toggle">
+                    <a href="#" onclick="showLogin()">Already have an account? Sign in</a>
+                </div>
+            </form>
+
+            <!-- OTP Verification Form -->
+            <form id="otp-form" class="auth-form hidden">
+                <div class="otp-container">
+                    <div class="email-info">
+                        <strong>📧 OTP Sent to Your Email!</strong><br>
+                        Please check your email inbox (including spam/junk folder) for the 6-digit verification code.
+                    </div>
+                    <div class="form-group">
+                        <label for="otp-code">Enter 6-digit OTP</label>
+                        <input type="text" id="otp-code" name="otp" class="otp-input" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required>
+                    </div>
+                    <input type="hidden" id="otp-email" name="email">
+                    <button type="submit" class="btn">Verify OTP</button>
+                    <button type="button" class="btn btn-secondary" onclick="resendOTP()">Resend OTP</button>
+                    <div class="form-toggle">
+                        <a href="#" onclick="showLogin()">Back to Login</a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Profile/Dashboard -->
+            <div id="profile-section" class="hidden">
+                <div class="profile-card">
+                    <h2>Welcome!</h2>
+                    <div class="profile-info" id="profile-info">
+                        <!-- Profile data will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        let currentUser = null;
+
+        // Utility functions
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 8000);
+        }
+
+        function showLoading(button) {
+            button.disabled = true;
+            button.innerHTML = '<span class="loading"></span> Loading...';
+        }
+
+        function hideLoading(button, text) {
+            button.disabled = false;
+            button.innerHTML = text;
+        }
+
+        function updateHeader(title, subtitle) {
+            document.getElementById('page-title').textContent = title;
+            document.getElementById('page-subtitle').textContent = subtitle;
+        }
+
+        function hideAllForms() {
+            document.querySelectorAll('.auth-form, #profile-section').forEach(el => {
+                el.classList.add('hidden');
+            });
+        }
+
+        // Form navigation
+        function showLogin() {
+            hideAllForms();
+            document.getElementById('login-form').classList.remove('hidden');
+            updateHeader('Welcome Back', 'Sign in to your account');
+            // Clear form
+            document.getElementById('login-form').reset();
+        }
+
+        function showSignup() {
+            hideAllForms();
+            document.getElementById('signup-form').classList.remove('hidden');
+            updateHeader('Create Account', 'Join us today');
+            // Clear form
+            document.getElementById('signup-form').reset();
+        }
+
+        function showOTP(email) {
+            hideAllForms();
+            document.getElementById('otp-form').classList.remove('hidden');
+            document.getElementById('otp-email').value = email;
+            updateHeader('Verify Email', 'Check your email for the OTP code');
+            // Clear OTP input
+            document.getElementById('otp-code').value = '';
+            document.getElementById('otp-code').focus();
+        }
+
+        function showProfile() {
+            hideAllForms();
+            document.getElementById('profile-section').classList.remove('hidden');
+            updateHeader('Dashboard', 'Welcome to your account');
+            loadProfile();
+        }
+
+        // API calls
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                mode: 'cors',
+                credentials: 'include', // Important for cookies
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.message || 'Something went wrong');
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Event handlers
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = e.target.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            
+            try {
+                showLoading(button);
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+                
+                const result = await apiCall('/login', 'POST', data);
+                showMessage(result.message, 'success');
+                currentUser = result.data;
+                showProfile();
+            } catch (error) {
+                showMessage(error.message, 'error');
+                
+                // Check if user needs verification
+                if (error.message.includes('verify your account')) {
+                    const userEmail = document.getElementById('login-identifier').value;
+                    if (userEmail.includes('@')) {
+                        setTimeout(() => showOTP(userEmail), 2000);
+                    }
+                }
+            } finally {
+                hideLoading(button, originalText);
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = e.target.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            
+            try {
+                showLoading(button);
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+                
+                const result = await apiCall('/signup', 'POST', data);
+                showMessage(result.message, 'success');
+                showOTP(data.email);
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                hideLoading(button, originalText);
+            }
+        });
+
+        document.getElementById('otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = e.target.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            
+            try {
+                showLoading(button);
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+                
+                const result = await apiCall('/verify-otp', 'POST', data);
+                showMessage(result.message, 'success');
+                setTimeout(() => showLogin(), 2000);
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                hideLoading(button, originalText);
+            }
+        });
+
+        // Format OTP input
+        document.getElementById('otp-code').addEventListener('input', function(e) {
+            // Only allow numbers
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Auto-submit if 6 digits entered
+            if (this.value.length === 6) {
+                document.getElementById('otp-form').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        async function resendOTP() {
+            try {
+                const email = document.getElementById('otp-email').value;
+                const result = await apiCall('/resend-otp', 'POST', { email });
+                showMessage(result.message, 'success');
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                const result = await apiCall('/profile');
+                const profile = result.data;
+                
+                document.getElementById('profile-info').innerHTML = `
+                    <h3>Profile Information</h3>
+                    <div class="profile-detail">
+                        <label>Name:</label>
+                        <span>${profile.name}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <label>Email:</label>
+                        <span>${profile.email}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <label>Mobile:</label>
+                        <span>${profile.mobile}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <label>Status:</label>
+                        <span>${profile.isVerified ? '✅ Verified' : '⏳ Pending'}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <label>Member Since:</label>
+                        <span>${new Date(profile.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    ${profile.verifiedAt ? `
+                    <div class="profile-detail">
+                        <label>Verified On:</label>
+                        <span>${new Date(profile.verifiedAt).toLocaleDateString()}</span>
+                    </div>
+                    ` : ''}
+                `;
+            } catch (error) {
+                showMessage(error.message, 'error');
+                showLogin();
+            }
+        }
+
+        async function logout() {
+            try {
+                await apiCall('/logout', 'POST');
+                showMessage('Logged out successfully', 'success');
+                currentUser = null;
+                showLogin();
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        }
+
+        // Check if user is already logged in on page load
+        window.addEventListener('load', async () => {
+            try {
+                const result = await apiCall('/profile');
+                currentUser = result.data;
+                showProfile();
+            } catch (error) {
+                console.log('User not authenticated, showing login');
+                showLogin();
+            }
+        });
+
+        // Auto-refresh tokens every 14 minutes
+        setInterval(async () => {
+            if (currentUser) {
+                try {
+                    await apiCall('/refresh-token', 'POST');
+                    console.log('Tokens refreshed successfully');
+                } catch (error) {
+                    console.log('Token refresh failed, redirecting to login');
+                    showMessage('Session expired. Please login again.', 'error');
+                    showLogin();
+                    currentUser = null;
+                }
+            }
+        }, 14 * 60 * 1000); // Refresh every 14 minutes
+
+        // Handle network errors gracefully
+        window.addEventListener('online', () => {
+            console.log('Connection restored');
+        });
+
+        window.addEventListener('offline', () => {
+            showMessage('No internet connection. Please check your network.', 'error');
+        });
+    </script>
+</body>
+</html>
