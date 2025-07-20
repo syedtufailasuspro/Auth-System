@@ -534,7 +534,7 @@ app.post('/api/refresh-token', (req, res) => {
 });
 
 // Protected route example
-app.get('/profile', authenticateToken, (req, res) => {
+app.get('/api/profile', authenticateToken, (req, res) => {
   try {
     const user = users.get(req.userId);
     if (!user) {
@@ -655,7 +655,7 @@ app.post('/api/resend-otp', async (req, res) => {
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
     success: true,
     message: 'Server is running',
