@@ -330,8 +330,10 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
-        let currentUser = null;
+        const API_BASE = process.env.NODE_ENV === 'production' 
+        ? '' // Same domain in production
+        : 'http://localhost:3000'; // Localhost in development
+
 
         // Utility functions
         function showMessage(message, type = 'info') {
