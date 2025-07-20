@@ -400,15 +400,6 @@ app.post('/api/verify-otp', async (req, res) => {
       });
     }
 
-    // Check OTP
-    const otpData = otps.get(email);
-    if (!otpData) {
-      return res.status(400).json({
-        success: false,
-        message: 'OTP not found or expired. Please request a new OTP.'
-      });
-    }
-
     // Check expiry
     if (Date.now() > otpData.expiresAt) {
       otps.delete(email);
