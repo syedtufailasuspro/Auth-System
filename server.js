@@ -399,7 +399,10 @@ app.post('/api/verify-otp', async (req, res) => {
         message: 'Email and OTP are required'
       });
     }
-
+    
+  // Check OTP
+    const otpData = otps.get(email);
+    
     // Check expiry
     if (Date.now() > otpData.expiresAt) {
       otps.delete(email);
