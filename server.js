@@ -43,7 +43,7 @@ app.use(cookieParser());
 app.use((req, res, next) => {
   // Allow multiple origins in production
   const allowedOrigins = [
-  'https://auth-system-vzmh.vercel.app/'
+  'https://auth-system-vzmh.vercel.app'
 ];
 
   
